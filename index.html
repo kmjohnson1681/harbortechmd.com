@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HarborTech, LLC — AI-Powered Business Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #020817;
+      --surface:  #0A0F1E;
+      --card:     #0D1526;
+      --border:   rgba(255,255,255,0.06);
+      --border-h: rgba(37,99,235,0.4);
+      --text:     #F0F4FF;
+      --muted:    #8892A4;
+      --subtle:   #4B5563;
+      --violet:   #2563EB;
+      --indigo:   #3B82F6;
+      --blue:     #0EA5E9;
+      --cyan:     #06B6D4;
+      --green:    #10B981;
+      --red:      #EF4444;
+      --gold:     #F59E0B;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS PARTICLES ── */
+    #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.4; }
+
+    /* ── GRID ── */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── GLOW ORBS ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(150px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 { width:700px; height:700px; background:radial-gradient(circle, rgba(37,99,235,0.12), transparent 70%); top:-250px; left:-200px; animation: drift 12s ease-in-out infinite; }
+    .orb-2 { width:600px; height:600px; background:radial-gradient(circle, rgba(6,182,212,0.08), transparent 70%); top:200px; right:-200px; animation: drift 10s ease-in-out infinite reverse; }
+    .orb-3 { width:500px; height:500px; background:radial-gradient(circle, rgba(59,130,246,0.06), transparent 70%); bottom:-100px; left:30%; animation: drift 14s ease-in-out infinite; }
+    @keyframes drift { 0%,100%{transform:translate(0,0)} 33%{transform:translate(30px,-20px)} 66%{transform:translate(-20px,30px)} }
+
+    /* ── ALL CONTENT ABOVE CANVAS ── */
+    nav, main, footer { position: relative; z-index: 10; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:1000;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(2,8,23,0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      font-size: 1.65rem; font-weight: 800;
+      letter-spacing: -0.02em; text-decoration: none;
+      background: linear-gradient(135deg, #2563EB, #06B6D4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .nav-links { display:flex; align-items:center; gap:2rem; list-style:none; }
+    .nav-links a { color:var(--muted); text-decoration:none; font-size:0.875rem; font-weight:500; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--text); }
+    .nav-cta {
+      position: relative;
+      background: linear-gradient(135deg, var(--violet), var(--indigo)) !important;
+      color: white !important; padding: 0.5rem 1.25rem; border-radius: 8px;
+      font-weight: 600 !important; font-size: 0.85rem !important;
+      box-shadow: 0 0 24px rgba(37,99,235,0.35);
+      transition: box-shadow 0.2s, transform 0.2s !important;
+    }
+    .nav-cta:hover { box-shadow: 0 0 40px rgba(37,99,235,0.55) !important; transform: translateY(-1px); color:white !important; }
+
+    /* ── HERO ── */
+    .hero-wrap { padding: 9rem 2.5rem 5rem; position:relative; }
+    .hero { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1.1fr 0.9fr; gap:5rem; align-items:center; }
+
+    .ai-badge {
+      display: inline-flex; align-items:center; gap:0.6rem;
+      background: rgba(37,99,235,0.08);
+      border: 1px solid rgba(37,99,235,0.25);
+      border-radius: 999px; padding: 0.4rem 1rem;
+      font-size: 0.7rem; font-weight: 700;
+      color: #BAE6FD; letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1.75rem;
+    }
+    .ai-badge-dot { width:7px; height:7px; background:var(--violet); border-radius:50%; box-shadow:0 0 10px var(--violet); animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+    .hero h1 {
+      font-size: 3.75rem; font-weight: 900; line-height: 1.05;
+      letter-spacing: -0.04em; margin-bottom: 0.5rem;
+    }
+    .typewriter-wrap { font-size: 3.75rem; font-weight: 900; line-height: 1.05; letter-spacing: -0.04em; margin-bottom: 1.75rem; min-height: 1.2em; }
+    .typewriter {
+      background: linear-gradient(135deg, #2563EB, #06B6D4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .cursor { display:inline-block; width:3px; height:0.9em; background:var(--violet); margin-left:3px; vertical-align:middle; animation:blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .hero-sub { color:var(--muted); font-size:1.05rem; line-height:1.75; margin-bottom:2.5rem; max-width:500px; }
+    .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2.5rem; }
+
+    .btn-primary {
+      display:inline-flex; align-items:center; gap:0.5rem;
+      background: linear-gradient(135deg, var(--violet), var(--indigo));
+      color:white; padding:0.9rem 2rem; border-radius:10px;
+      text-decoration:none; font-weight:700; font-size:0.95rem;
+      border:none; cursor:pointer;
+      box-shadow: 0 0 30px rgba(37,99,235,0.35);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { box-shadow:0 0 50px rgba(37,99,235,0.55); transform:translateY(-2px); }
+    .btn-ghost {
+      display:inline-flex; align-items:center; gap:0.5rem;
+      background: rgba(255,255,255,0.03); color:var(--text);
+      padding:0.9rem 2rem; border-radius:10px;
+      text-decoration:none; font-weight:600; font-size:0.95rem;
+      border:1px solid var(--border); backdrop-filter:blur(10px);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color:rgba(37,99,235,0.4); background:rgba(37,99,235,0.05); }
+
+    .tech-chips { display:flex; gap:0.6rem; flex-wrap:wrap; }
+    .chip {
+      display:inline-flex; align-items:center; gap:0.4rem;
+      background: rgba(255,255,255,0.03); border:1px solid var(--border);
+      border-radius:999px; padding:0.3rem 0.75rem;
+      font-size:0.7rem; font-weight:600; color:var(--muted);
+      font-family:'JetBrains Mono', monospace;
+    }
+    .chip-dot { width:5px; height:5px; border-radius:50%; }
+
+    /* ── TERMINAL CARD ── */
+    .terminal {
+      background: rgba(10,15,30,0.9);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 16px; overflow:hidden;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 80px rgba(37,99,235,0.1), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .terminal-bar {
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      padding: 0.875rem 1.25rem;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .t-dots { display:flex; gap:6px; }
+    .t-dot { width:10px; height:10px; border-radius:50%; }
+    .t-title { font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--muted); }
+    .t-live { display:flex; align-items:center; gap:0.4rem; font-size:0.7rem; font-weight:600; color:var(--green); }
+    .t-live-dot { width:6px; height:6px; background:var(--green); border-radius:50%; box-shadow:0 0 8px var(--green); animation:pulse 2s infinite; }
+    .terminal-body { padding:1.5rem; }
+
+    .ai-thinking {
+      font-family:'JetBrains Mono',monospace;
+      font-size:0.72rem; color:var(--muted);
+      margin-bottom:1.25rem; line-height:1.8;
+    }
+    .ai-thinking .line { display:flex; gap:0.75rem; align-items:flex-start; }
+    .ai-thinking .prompt { color:var(--violet); flex-shrink:0; }
+    .ai-thinking .output { color:var(--muted); }
+    .ai-thinking .highlight { color:var(--cyan); }
+    .ai-thinking .success { color:var(--green); }
+    .ai-thinking .warn { color:var(--gold); }
+
+    .leak-box {
+      background: linear-gradient(135deg, rgba(245,158,11,0.07), rgba(245,158,11,0.02));
+      border: 1px solid rgba(245,158,11,0.18);
+      border-radius: 12px; padding:1.25rem; margin:1.25rem 0; text-align:center;
+    }
+    .leak-tag { font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:rgba(245,158,11,0.6); margin-bottom:0.4rem; font-family:'JetBrains Mono',monospace; }
+    .leak-val { font-size:1.8rem; font-weight:900; letter-spacing:-0.03em; background:linear-gradient(135deg,#F59E0B,#FBBF24); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .leak-sub { font-size:0.72rem; color:var(--muted); margin-top:0.3rem; }
+
+    .mini-metrics { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem; }
+    .mm { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:10px; padding:0.875rem; }
+    .mm-val { font-size:1.25rem; font-weight:800; font-variant-numeric:tabular-nums; }
+    .mm-label { font-size:0.65rem; color:var(--muted); margin-top:0.2rem; }
+    .mm-delta { font-size:0.62rem; color:var(--green); margin-top:0.1rem; }
+
+    .bar-block { margin-top:0.5rem; }
+    .bar-head { font-family:'JetBrains Mono',monospace; font-size:0.62rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--subtle); margin-bottom:0.75rem; }
+    .b-row { margin-bottom:0.65rem; }
+    .b-meta { display:flex; justify-content:space-between; font-size:0.7rem; color:var(--muted); margin-bottom:0.3rem; }
+    .b-track { height:4px; background:rgba(255,255,255,0.05); border-radius:999px; overflow:hidden; }
+    .b-fill { height:100%; border-radius:999px; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+    .f-violet { background:linear-gradient(90deg,var(--violet),var(--cyan)); }
+    .f-red { background:var(--red); }
+    .f-green { background:var(--green); }
+
+    /* ── SECTION ── */
+    section { padding:6rem 2.5rem; position:relative; z-index:10; }
+    .container { max-width:1200px; margin:0 auto; }
+    .s-tag {
+      display:inline-flex; align-items:center; gap:0.5rem;
+      font-size:0.68rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.14em; color:var(--violet); margin-bottom:1rem;
+      font-family:'JetBrains Mono',monospace;
+    }
+    .s-tag::before { content:''; width:20px; height:1px; background:var(--violet); }
+    .s-title { font-size:2.5rem; font-weight:800; letter-spacing:-0.03em; line-height:1.1; margin-bottom:1rem; }
+    .s-sub { color:var(--muted); font-size:1rem; max-width:560px; line-height:1.75; margin-bottom:3.5rem; }
+    .grad { background:linear-gradient(135deg,var(--violet),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      background: linear-gradient(135deg, rgba(37,99,235,0.07), rgba(6,182,212,0.04));
+      border:1px solid rgba(37,99,235,0.12);
+      border-radius:20px; padding:2.5rem 3rem;
+      display:grid; grid-template-columns:repeat(4,1fr); gap:2rem;
+      position:relative; overflow:hidden; margin-bottom:4rem;
+    }
+    .stats-strip::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(37,99,235,0.5),rgba(6,182,212,0.5),transparent); }
+    .s-stat { text-align:center; }
+    .s-stat-num { font-size:2.25rem; font-weight:900; letter-spacing:-0.03em; background:linear-gradient(135deg,var(--text),var(--violet)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .s-stat-label { font-size:0.78rem; color:var(--muted); margin-top:0.3rem; }
+
+    /* ── SERVICE CARDS ── */
+    .svc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; }
+    .svc {
+      background: rgba(13,21,38,0.8);
+      border:1px solid var(--border); border-radius:16px; padding:1.75rem;
+      backdrop-filter:blur(10px);
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      position:relative; overflow:hidden;
+    }
+    .svc::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(37,99,235,0.04),transparent); opacity:0; transition:opacity 0.3s; }
+    .svc:hover { border-color:rgba(37,99,235,0.35); transform:translateY(-4px); box-shadow:0 20px 60px rgba(37,99,235,0.1); }
+    .svc:hover::before { opacity:1; }
+    .svc.star { border-color:rgba(37,99,235,0.25); background:linear-gradient(135deg,rgba(37,99,235,0.06),rgba(6,182,212,0.03),rgba(13,21,38,0.8)); box-shadow:0 0 40px rgba(37,99,235,0.08); }
+    .svc.star::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--violet),transparent); }
+    .new-tag { display:inline-block; background:linear-gradient(135deg,rgba(37,99,235,0.2),rgba(6,182,212,0.15)); border:1px solid rgba(37,99,235,0.3); color:#BAE6FD; font-size:0.6rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; padding:0.2rem 0.6rem; border-radius:999px; margin-bottom:1rem; font-family:'JetBrains Mono',monospace; }
+    .svc-ico { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.25rem; margin-bottom:1.25rem; }
+    .svc h3 { font-size:0.95rem; font-weight:700; margin-bottom:0.75rem; letter-spacing:-0.01em; }
+    .svc p { color:var(--muted); font-size:0.85rem; line-height:1.65; }
+
+    /* ── RI SECTION ── */
+    .ri-bg { background:linear-gradient(180deg,var(--bg),#060C1C,var(--bg)); }
+    .ri-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
+    .ri-steps { display:flex; flex-direction:column; gap:1.75rem; margin-top:2.5rem; }
+    .ri-step { display:flex; gap:1.25rem; align-items:flex-start; }
+    .ri-n { width:34px; height:34px; min-width:34px; border-radius:10px; background:linear-gradient(135deg,var(--violet),var(--indigo)); display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800; color:white; box-shadow:0 0 20px rgba(37,99,235,0.35); font-family:'JetBrains Mono',monospace; }
+    .ri-step h4 { font-size:0.95rem; font-weight:600; margin-bottom:0.3rem; }
+    .ri-step p { color:var(--muted); font-size:0.875rem; line-height:1.6; }
+
+    /* ── INDUSTRIES ── */
+    .ind-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1rem; }
+    .ind {
+      background:rgba(13,21,38,0.6); border:1px solid var(--border);
+      border-radius:12px; padding:1.25rem 1rem; text-align:center;
+      font-size:0.825rem; font-weight:500; color:var(--muted);
+      transition:border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+      cursor:default;
+    }
+    .ind:hover { border-color:rgba(37,99,235,0.4); color:var(--text); background:rgba(37,99,235,0.05); transform:translateY(-3px); }
+    .ind-icon { font-size:1.5rem; display:block; margin-bottom:0.5rem; }
+
+    /* ── TESTIMONIALS ── */
+    .test-bg { background:var(--surface); }
+    .test-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+    .test-card {
+      background:rgba(13,21,38,0.8); border:1px solid var(--border);
+      border-radius:16px; padding:2rem; backdrop-filter:blur(10px);
+      transition:border-color 0.3s; position:relative;
+    }
+    .test-card:hover { border-color:rgba(37,99,235,0.3); }
+    .test-card::before { content:'"'; position:absolute; top:1.5rem; right:1.75rem; font-size:4rem; line-height:1; color:rgba(37,99,235,0.1); font-family:Georgia,serif; }
+    .stars { color:var(--gold); font-size:0.85rem; letter-spacing:2px; margin-bottom:1rem; }
+    .test-card blockquote { color:var(--muted); font-size:0.875rem; line-height:1.75; margin-bottom:1.5rem; font-style:italic; }
+    .t-name { font-weight:700; font-size:0.875rem; }
+    .t-role { font-size:0.775rem; color:var(--subtle); margin-top:0.2rem; }
+
+    /* ── ABOUT ── */
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
+    .skill-cards { display:flex; flex-direction:column; gap:1rem; }
+    .skill-card { background:rgba(13,21,38,0.8); border:1px solid var(--border); border-radius:12px; padding:1.25rem 1.5rem; transition:border-color 0.2s; }
+    .skill-card:hover { border-color:rgba(37,99,235,0.3); }
+    .skill-tag { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.4rem; font-family:'JetBrains Mono',monospace; }
+    .skill-card p { color:var(--muted); font-size:0.85rem; line-height:1.6; }
+
+    /* ── CONTACT ── */
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; }
+    .c-items { display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem; }
+    .c-item { display:flex; gap:1rem; align-items:flex-start; }
+    .c-ico { width:42px; height:42px; min-width:42px; background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.15); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; }
+    .c-lbl { font-size:0.7rem; font-weight:700; color:var(--subtle); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.3rem; font-family:'JetBrains Mono',monospace; }
+    .c-val { font-size:0.9rem; color:var(--muted); }
+    .c-val a { color:var(--muted); text-decoration:none; transition:color 0.2s; }
+    .c-val a:hover { color:var(--violet); }
+
+    form { display:flex; flex-direction:column; gap:1rem; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    input, textarea, select {
+      background:rgba(255,255,255,0.02); border:1px solid var(--border);
+      border-radius:10px; padding:0.875rem 1rem; color:var(--text);
+      font-family:'Inter',sans-serif; font-size:0.875rem; width:100%;
+      transition:border-color 0.2s, background 0.2s; outline:none;
+    }
+    input:focus, textarea:focus, select:focus { border-color:rgba(37,99,235,0.45); background:rgba(37,99,235,0.03); }
+    input::placeholder, textarea::placeholder { color:var(--subtle); }
+    select { cursor:pointer; }
+    select option { background:#0A0F1E; }
+    textarea { resize:vertical; min-height:130px; }
+
+    /* ── FOOTER ── */
+    footer { border-top:1px solid var(--border); padding:3rem 2.5rem; position:relative; z-index:10; }
+    .footer-inner { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; }
+    .footer-brand { font-size:1.1rem; font-weight:800; letter-spacing:-0.02em; background:linear-gradient(135deg,#2563EB,#06B6D4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; -webkit-text-stroke: 0.4px rgba(255,255,255,0.25); }
+    .footer-links { display:flex; gap:2rem; list-style:none; }
+    .footer-links a { color:var(--subtle); text-decoration:none; font-size:0.825rem; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--text); }
+    .social-row { display:flex; gap:0.75rem; }
+    .soc { width:36px; height:36px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--muted); text-decoration:none; font-size:0.75rem; font-weight:700; transition:border-color 0.2s, color 0.2s; }
+    .soc:hover { border-color:var(--violet); color:var(--violet); }
+    .footer-copy { color:var(--subtle); font-size:0.775rem; }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1024px) {
+      .svc-grid { grid-template-columns:repeat(2,1fr); }
+      .ind-grid { grid-template-columns:repeat(3,1fr); }
+      .test-grid { grid-template-columns:repeat(2,1fr); }
+      .stats-strip { grid-template-columns:repeat(2,1fr); }
+    }
+    @media(max-width:768px) {
+      .hero { grid-template-columns:1fr; gap:3rem; }
+      .hero h1, .typewriter-wrap { font-size:2.4rem; }
+      .ri-grid, .about-grid, .contact-grid { grid-template-columns:1fr; }
+      .svc-grid, .test-grid { grid-template-columns:1fr; }
+      .ind-grid { grid-template-columns:repeat(2,1fr); }
+      .form-row { grid-template-columns:1fr; }
+      .footer-inner { flex-direction:column; align-items:flex-start; }
+      nav { padding:0 1.25rem; }
+      .nav-links { display:none; }
+      section, .hero-wrap { padding-left:1.25rem; padding-right:1.25rem; }
+      .stats-strip { padding:1.75rem; grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="grid-overlay"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-brand">HarborTech, LLC</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#revenue">Revenue Intelligence</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ── HERO ── -->
+<div class="hero-wrap">
+  <div class="hero">
+    <div>
+      <div class="ai-badge"><div class="ai-badge-dot"></div> AI-Powered Business Intelligence</div>
+      <h1>Building Beyond<br/>Expectations</h1>
+      <div class="typewriter-wrap">
+        For <span class="typewriter" id="tw"></span><span class="cursor"></span>
+      </div>
+      <p class="hero-sub">From federal IT infrastructure to AI-powered revenue intelligence — HarborTech delivers cutting-edge technology solutions for government and private sector clients across the Mid-Atlantic.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">Partner With Us →</a>
+        <a href="#revenue" class="btn-ghost">See Revenue Intelligence</a>
+      </div>
+      <div class="tech-chips">
+        <span class="chip"><span class="chip-dot" style="background:var(--violet)"></span>AI Analysis</span>
+        <span class="chip"><span class="chip-dot" style="background:var(--cyan)"></span>Cloud Infrastructure</span>
+        <span class="chip"><span class="chip-dot" style="background:var(--green)"></span>Federal IT</span>
+        <span class="chip"><span class="chip-dot" style="background:var(--gold)"></span>DevOps</span>
+      </div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="t-dots">
+          <div class="t-dot" style="background:#EF4444"></div>
+          <div class="t-dot" style="background:#F59E0B"></div>
+          <div class="t-dot" style="background:#10B981"></div>
+        </div>
+        <span class="t-title">harbortech ~ revenue-intelligence</span>
+        <div class="t-live"><div class="t-live-dot"></div>LIVE</div>
+      </div>
+      <div class="terminal-body">
+        <div class="ai-thinking">
+          <div class="line"><span class="prompt">$</span><span class="output">analyzing <span class="highlight">Q2_sales_data.csv</span> (4,820 rows)</span></div>
+          <div class="line"><span class="prompt">→</span><span class="output success">✓ Smart ingestion complete — 3 issues fixed</span></div>
+          <div class="line"><span class="prompt">→</span><span class="output">Computing revenue metrics by day, staff, category...</span></div>
+          <div class="line"><span class="prompt">→</span><span class="output warn">⚠ Staff gap detected: 29% variance between top/bottom</span></div>
+          <div class="line"><span class="prompt">→</span><span class="output warn">⚠ Tuesday revenue 39% below weekly average</span></div>
+          <div class="line"><span class="prompt">→</span><span class="output success">✓ Leakage estimate computed</span></div>
+        </div>
+        <div class="leak-box">
+          <div class="leak-tag">// estimated monthly revenue leak</div>
+          <div class="leak-val">$6,200 – $9,800</div>
+          <div class="leak-sub">Computed from 4 factors in your actual data</div>
+        </div>
+        <div class="mini-metrics">
+          <div class="mm"><div class="mm-val" style="color:var(--gold)">$8,400</div><div class="mm-label">Avg monthly leak</div><div class="mm-delta">↑ Recoverable</div></div>
+          <div class="mm"><div class="mm-val" style="color:var(--violet)">23%</div><div class="mm-label">Staff gap</div><div class="mm-delta">↑ Addressable</div></div>
+        </div>
+        <div class="bar-block">
+          <div class="bar-head">// day_of_week_revenue</div>
+          <div class="b-row"><div class="b-meta"><span>Friday</span><span style="color:var(--green)">$4,820 ↑</span></div><div class="b-track"><div class="b-fill f-green" style="width:100%"></div></div></div>
+          <div class="b-row"><div class="b-meta"><span>Monday</span><span>$3,240</span></div><div class="b-track"><div class="b-fill f-violet" style="width:67%"></div></div></div>
+          <div class="b-row"><div class="b-meta"><span>Tuesday</span><span style="color:var(--red)">$1,890 ↓</span></div><div class="b-track"><div class="b-fill f-red" style="width:39%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<section style="padding-top:0; padding-bottom:2rem;">
+  <div class="container">
+    <div class="stats-strip">
+      <div class="s-stat"><div class="s-stat-num">14</div><div class="s-stat-label">Industries supported</div></div>
+      <div class="s-stat"><div class="s-stat-num">$15K</div><div class="s-stat-label">Avg monthly leak found</div></div>
+      <div class="s-stat"><div class="s-stat-num">12+</div><div class="s-stat-label">Years federal IT experience</div></div>
+      <div class="s-stat"><div class="s-stat-num">90</div><div class="s-stat-label">Day recovery plan included</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="container">
+    <div class="s-tag">What We Do</div>
+    <h2 class="s-title">Four Ways We Grow<br/><span class="grad">Your Business</span></h2>
+    <p class="s-sub">From AI-powered revenue analysis to federal IT infrastructure — HarborTech delivers across every layer of your operation.</p>
+    <div class="svc-grid">
+      <div class="svc star">
+        <div class="new-tag">// new_service.ai</div>
+        <div class="svc-ico" style="background:rgba(245,158,11,0.1)">💰</div>
+        <h3>Revenue Intelligence</h3>
+        <p>AI-powered analysis of your actual business data — sales records, job history, invoices — delivering a dollar-quantified report of where money is leaking and a 90-day recovery plan to get it back.</p>
+      </div>
+      <div class="svc">
+        <div class="svc-ico" style="background:rgba(37,99,235,0.1)">🏗️</div>
+        <h3>Real Estate Development & Acquisition</h3>
+        <p>Property disposition and acquisition with customized construction projects tailored to your investment requirements and goals.</p>
+      </div>
+      <div class="svc">
+        <div class="svc-ico" style="background:rgba(6,182,212,0.1)">🏛️</div>
+        <h3>Government & Federal IT Consulting</h3>
+        <p>DoD-level IT infrastructure, cloud architecture, STIG compliance, and RMF/ATO lifecycle support. 12+ years of federal and defense program experience on staff.</p>
+      </div>
+      <div class="svc">
+        <div class="svc-ico" style="background:rgba(16,185,129,0.1)">📦</div>
+        <h3>Materials Vendor Solutions</h3>
+        <p>Top-grade materials supplied and customized to your project specifications — reliable sourcing for contractors and developers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CREDENTIALS ── -->
+<section style="padding-top:0; padding-bottom:2rem;">
+  <div class="container">
+    <div class="stats-strip" style="grid-template-columns:repeat(4,1fr)">
+      <div class="s-stat"><div class="s-stat-num" style="font-size:1.25rem">DoD</div><div class="s-stat-label">DISA · NSA · Army · AWS</div></div>
+      <div class="s-stat"><div class="s-stat-num" style="font-size:1.25rem">M.S.</div><div class="s-stat-label">Cybersecurity — UMGC</div></div>
+      <div class="s-stat"><div class="s-stat-num" style="font-size:1.25rem">BCIT</div><div class="s-stat-label">Government contract awarded</div></div>
+      <div class="s-stat"><div class="s-stat-num" style="font-size:1.25rem">RMF</div><div class="s-stat-label">NIST · STIG · FedRAMP</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about" style="background:var(--surface);">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="s-tag">About HarborTech</div>
+        <h2 class="s-title">Federal-Grade Expertise.<br/><span class="grad">Private Sector Results.</span></h2>
+        <p style="color:var(--muted);font-size:1rem;line-height:1.75;margin-bottom:1.25rem;">HarborTech, LLC is a multi-discipline technology and business services firm built by a team of engineers and operators with deep roots in federal, DoD, and private sector environments.</p>
+        <p style="color:var(--muted);font-size:1rem;line-height:1.75;margin-bottom:1.25rem;">Our team brings 12+ years of federal IT infrastructure experience and a Master's-level background in Cybersecurity — applying that same rigor to every engagement, whether a government contract or a local business uncovering $10K in monthly revenue leaks.</p>
+        <p style="color:var(--muted);font-size:1rem;line-height:1.75;">Based in Bel Air, MD. Serving Baltimore, Harford County, and the greater Mid-Atlantic region.</p>
+      </div>
+      <div class="skill-cards">
+        <div class="skill-card">
+          <div class="skill-tag" style="color:var(--violet)">// Cloud & Infrastructure</div>
+          <p>AWS, Azure, VMware, Terraform, Kubernetes, Docker, CI/CD pipelines, hybrid cloud architecture</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-tag" style="color:var(--cyan)">// Security & Compliance</div>
+          <p>DISA STIGs, RMF, NIST 800-53, FedRAMP, ATO lifecycle, vulnerability remediation, ACAS/Nessus</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-tag" style="color:var(--gold)">// Automation & DevOps</div>
+          <p>Terraform IaC, Bash/Python/PowerShell scripting, GitLab CI/CD, Puppet, infrastructure automation</p>
+        </div>
+        <div class="skill-card">
+          <div class="skill-tag" style="color:var(--green)">// AI & Revenue Intelligence</div>
+          <p>Claude AI integration, automated business analysis, dollar-quantified diagnostics, 90-day action planning</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── REVENUE INTELLIGENCE ── -->
+<section id="revenue" class="ri-bg">
+  <div class="container">
+    <div class="ri-grid">
+      <div>
+        <div class="s-tag">Revenue Intelligence</div>
+        <h2 class="s-title">Find Where Your<br/><span class="grad">Business Is Leaking</span></h2>
+        <p class="s-sub">Most businesses lose $5,000–$15,000 per month without knowing it. Slow days nobody noticed. Staff performance gaps. Jobs billed below average. We find it using your actual numbers — not estimates.</p>
+        <div class="ri-steps">
+          <div class="ri-step"><div class="ri-n">01</div><div><h4>Upload your data</h4><p>Sales exports, job history, invoices, POS reports. Any format — CSV, Excel, PDF, Word. No cleanup required.</p></div></div>
+          <div class="ri-step"><div class="ri-n">02</div><div><h4>AI computes the real numbers</h4><p>Revenue totals, staff variance, slow periods, billing gaps — calculated from your actual records using AI-powered analysis.</p></div></div>
+          <div class="ri-step"><div class="ri-n">03</div><div><h4>Dollar-quantified action plan</h4><p>Every finding references a computed metric from your own data. Includes a 90-day recovery roadmap with specific steps.</p></div></div>
+        </div>
+        <div style="margin-top:2.5rem"><a href="#contact" class="btn-primary">Book a Free Analysis →</a></div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="t-dots">
+            <div class="t-dot" style="background:#EF4444"></div>
+            <div class="t-dot" style="background:#F59E0B"></div>
+            <div class="t-dot" style="background:#10B981"></div>
+          </div>
+          <span class="t-title">analysis ~ hvac_company_q2</span>
+          <div class="t-live"><div class="t-live-dot"></div>COMPLETE</div>
+        </div>
+        <div class="terminal-body">
+          <div class="leak-box">
+            <div class="leak-tag">// monthly_revenue_leak_estimate</div>
+            <div class="leak-val">$7,100 – $11,200</div>
+            <div class="leak-sub">4 factors identified · 90-day plan generated</div>
+          </div>
+          <div class="bar-block" style="margin-bottom:1.25rem">
+            <div class="bar-head">// staff_performance_vs_average</div>
+            <div class="b-row"><div class="b-meta"><span>Tech A</span><span style="color:var(--green)">+28% above avg</span></div><div class="b-track"><div class="b-fill f-green" style="width:88%"></div></div></div>
+            <div class="b-row"><div class="b-meta"><span>Tech B</span><span>at average</span></div><div class="b-track"><div class="b-fill f-violet" style="width:55%"></div></div></div>
+            <div class="b-row"><div class="b-meta"><span>Tech C</span><span style="color:var(--red)">-29% below avg</span></div><div class="b-track"><div class="b-fill f-red" style="width:26%"></div></div></div>
+          </div>
+          <div class="bar-block">
+            <div class="bar-head">// monthly_revenue_trend</div>
+            <div class="b-row"><div class="b-meta"><span>March</span><span>$42,800</span></div><div class="b-track"><div class="b-fill f-violet" style="width:72%"></div></div></div>
+            <div class="b-row"><div class="b-meta"><span>April</span><span style="color:var(--red)">$38,200 ↓</span></div><div class="b-track"><div class="b-fill f-red" style="width:60%"></div></div></div>
+            <div class="b-row"><div class="b-meta"><span>May</span><span style="color:var(--green)">$51,400 ↑</span></div><div class="b-track"><div class="b-fill f-green" style="width:100%"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INDUSTRIES ── -->
+<section id="industries">
+  <div class="container">
+    <div class="s-tag">Industries We Serve</div>
+    <h2 class="s-title">Built for Field Service<br/><span class="grad">& Blue-Collar Businesses</span></h2>
+    <p class="s-sub">Revenue Intelligence is calibrated for 14 industries. We know your terminology, your data formats, and your specific revenue leak patterns.</p>
+    <div class="ind-grid">
+      <div class="ind"><span class="ind-icon">❄️</span>HVAC</div>
+      <div class="ind"><span class="ind-icon">🔧</span>Plumbing</div>
+      <div class="ind"><span class="ind-icon">🏠</span>Roofing</div>
+      <div class="ind"><span class="ind-icon">⚡</span>Electrical</div>
+      <div class="ind"><span class="ind-icon">🚛</span>Trucking</div>
+      <div class="ind"><span class="ind-icon">🌿</span>Landscaping</div>
+      <div class="ind"><span class="ind-icon">🚗</span>Auto Shop</div>
+      <div class="ind"><span class="ind-icon">🍽️</span>Restaurant</div>
+      <div class="ind"><span class="ind-icon">🏗️</span>Construction</div>
+      <div class="ind"><span class="ind-icon">💻</span>IT Services</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="test-bg">
+  <div class="container">
+    <div class="s-tag">Client Results</div>
+    <h2 class="s-title">What Our Clients Say</h2>
+    <p class="s-sub">Real results from real businesses across Maryland and the Mid-Atlantic region.</p>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"HarborTech, LLC exceeded my expectations with their innovative approach to real estate development. Truly a partner that delivers at every step."</blockquote>
+        <div class="t-name">George Chuba</div>
+        <div class="t-role">Property Developer</div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"The team was professional, knowledgeable, and incredibly responsive. Their commitment to customer satisfaction was evident in every interaction."</blockquote>
+        <div class="t-name">Criszon Bull</div>
+        <div class="t-role">IT Manager</div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Their attention to detail and commitment to excellence were evident throughout the entire experience. Highly recommend HarborTech to any business."</blockquote>
+        <div class="t-name">John Giordano</div>
+        <div class="t-role">Materials & Vendor</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div>
+        <div class="s-tag">Get In Touch</div>
+        <h2 class="s-title">Ready to Partner<br/><span class="grad">With Us?</span></h2>
+        <p class="s-sub">Whether you need a free revenue analysis, federal IT consulting, real estate development, or materials sourcing — we're ready.</p>
+        <div class="c-items">
+          <div class="c-item">
+            <div class="c-ico">📍</div>
+            <div><div class="c-lbl">Location</div><div class="c-val">Bel Air, MD — Serving Baltimore, Harford County & Mid-Atlantic</div></div>
+          </div>
+          <div class="c-item">
+            <div class="c-ico">📞</div>
+            <div><div class="c-lbl">Phone</div><div class="c-val"><a href="tel:6674549833">(667) 454-9833</a></div></div>
+          </div>
+          <div class="c-item">
+            <div class="c-ico">✉️</div>
+            <div><div class="c-lbl">Email</div><div class="c-val"><a href="mailto:info@harbortechmd.com">info@harbortechmd.com</a></div></div>
+          </div>
+        </div>
+      </div>
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <input type="text" placeholder="First Name" required/>
+          <input type="text" placeholder="Last Name" required/>
+        </div>
+        <input type="email" placeholder="Email Address" required/>
+        <input type="tel" placeholder="Phone Number"/>
+        <select>
+          <option value="" disabled selected>What can we help you with?</option>
+          <option>Revenue Intelligence Analysis (Free)</option>
+          <option>Government / Federal IT Consulting</option>
+          <option>Real Estate Development</option>
+          <option>Materials Vendor Solutions</option>
+          <option>General Inquiry</option>
+        </select>
+        <textarea placeholder="Tell us about your business and what you're looking to solve..."></textarea>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;border:none;font-size:1rem;padding:1rem;">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">HarborTech, LLC</div>
+      <p style="color:var(--subtle);font-size:0.775rem;margin-top:0.4rem;">Bel Air, MD — Building Beyond Expectations</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#revenue">Revenue Intelligence</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="social-row">
+      <a href="#" class="soc">f</a>
+      <a href="#" class="soc">in</a>
+      <a href="#" class="soc">𝕏</a>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+    <p class="footer-copy">© 2026 HarborTech, LLC. All rights reserved.</p>
+    <p class="footer-copy">
+      <a href="tel:6674549833" style="color:var(--subtle);text-decoration:none;">(667) 454-9833</a>
+      &nbsp;·&nbsp;
+      <a href="mailto:info@harbortechmd.com" style="color:var(--subtle);text-decoration:none;">info@harbortechmd.com</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+// ── PARTICLES ──
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, dots = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+for (let i = 0; i < 80; i++) {
+  dots.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.5 + 0.3,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
+    opacity: Math.random() * 0.5 + 0.1
+  });
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  dots.forEach(d => {
+    d.x += d.vx; d.y += d.vy;
+    if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+    if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(37,99,235,${d.opacity})`;
+    ctx.fill();
+  });
+
+  // Draw connecting lines
+  dots.forEach((a, i) => {
+    dots.slice(i+1).forEach(b => {
+      const dist = Math.hypot(a.x-b.x, a.y-b.y);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(59,130,246,${0.08 * (1 - dist/120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── TYPEWRITER ──
+const words = ['HVAC Companies', 'Restaurants', 'Field Service Businesses', 'Roofing Contractors', 'IT Teams', 'Auto Shops', 'Trucking Companies', 'Government Agencies'];
+let wi = 0, ci = 0, deleting = false;
+const tw = document.getElementById('tw');
+
+function type() {
+  const word = words[wi];
+  if (!deleting) {
+    tw.textContent = word.slice(0, ++ci);
+    if (ci === word.length) { deleting = true; setTimeout(type, 2000); return; }
+  } else {
+    tw.textContent = word.slice(0, --ci);
+    if (ci === 0) { deleting = false; wi = (wi+1) % words.length; }
+  }
+  setTimeout(type, deleting ? 40 : 70);
+}
+type();
+
+// ── BAR ANIMATION ON SCROLL ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.b-fill').forEach(b => {
+        const w = b.style.width; b.style.width = '0%';
+        setTimeout(() => b.style.width = w, 100);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.bar-block').forEach(b => obs.observe(b));
+
+// ── FORM SUBMIT ──
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = '✓ Message Sent!';
+  btn.style.background = 'linear-gradient(135deg,#10B981,#059669)';
+  btn.style.boxShadow = '0 0 30px rgba(16,185,129,0.4)';
+  setTimeout(() => {
+    btn.textContent = 'Send Message →';
+    btn.style.background = '';
+    btn.style.boxShadow = '';
+    e.target.reset();
+  }, 3000);
+}
+</script>
+</body>
+</html>
