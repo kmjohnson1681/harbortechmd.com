@@ -655,14 +655,14 @@
           </div>
         </div>
       </div>
-      <form onsubmit="handleSubmit(event)">
+      <form action="https://formspree.io/f/mykvolrb" method="POST" onsubmit="handleSubmit(event)">
         <div class="form-row">
-          <input type="text" placeholder="First Name" required/>
-          <input type="text" placeholder="Last Name" required/>
+          <input type="text" name="first_name" placeholder="First Name" required/>
+          <input type="text" name="last_name" placeholder="Last Name" required/>
         </div>
-        <input type="email" placeholder="Email Address" required/>
-        <input type="tel" placeholder="Phone Number"/>
-        <select>
+        <input type="email" name="email" placeholder="Email Address" required/>
+        <input type="tel" name="phone" placeholder="Phone Number"/>
+        <select name="service">
           <option value="" disabled selected>What can we help you with?</option>
           <option>Revenue Intelligence Analysis (Free)</option>
           <option>Government / Federal IT Consulting</option>
@@ -670,7 +670,7 @@
           <option>Materials Vendor Solutions</option>
           <option>General Inquiry</option>
         </select>
-        <textarea placeholder="Tell us about your business and what you're looking to solve..."></textarea>
+        <textarea name="message" placeholder="Tell us about your business and what you're looking to solve..."></textarea>
         <button type="submit" class="btn-primary" style="width:100%;justify-content:center;border:none;font-size:1rem;padding:1rem;">Send Message →</button>
       </form>
     </div>
