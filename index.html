@@ -34,7 +34,7 @@
     nav, main, footer, .status-bar { position: relative; z-index: 10; }
 
     /* STATUS BAR */
-    .status-bar { background: rgba(9,16,30,0.98); border-bottom: 1px solid var(--border); height: 32px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; color: var(--subtle); }
+    .status-bar { background: rgba(9,16,30,0.98); border-bottom: 1px solid var(--border); height: 32px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; color: #5B7A99; }
     .sb-left { display: flex; gap: 1.5rem; }
     .sb-right { display: flex; align-items: center; gap: 1.25rem; }
     .sb-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 8px var(--green); display: inline-block; margin-right: 0.35rem; animation: pulse 3s ease-in-out infinite; }
@@ -42,10 +42,10 @@
 
     /* NAV */
     nav { position: sticky; top: 0; z-index: 1000; height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; background: rgba(6,10,18,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-    .nav-brand { display: flex; align-items: center; gap: 0.65rem; text-decoration: none; }
-    .nav-logo { width: 26px; height: 26px; background: linear-gradient(135deg, var(--sky), var(--cyan)); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 900; color: white; letter-spacing: 0; }
-    .nav-name { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text); }
-    .nav-name em { color: var(--muted); font-style: normal; font-weight: 400; font-size: 0.85rem; margin-left: 0.25rem; }
+    .nav-brand { text-decoration: none; display: inline-flex; align-items: baseline; gap: 0; }
+    .nb-h { font-family: 'Barlow Condensed', sans-serif; font-size: 1.55rem; font-weight: 900; letter-spacing: 0.03em; color: var(--text); text-transform: uppercase; }
+    .nb-t { font-family: 'Barlow Condensed', sans-serif; font-size: 1.55rem; font-weight: 900; letter-spacing: 0.03em; color: var(--sky); text-transform: uppercase; }
+    .nb-llc { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: #4B6480; letter-spacing: 0.1em; margin-left: 0.4rem; align-self: flex-end; padding-bottom: 0.22rem; }
     .nav-links { display: flex; align-items: center; gap: 1.75rem; list-style: none; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: color 0.2s; }
     .nav-links a:hover { color: var(--text); }
@@ -197,9 +197,9 @@
 
     /* CONTACT */
     .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4.5rem; }
-    .c-items { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.25rem; }
+    .c-items { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem; }
     .c-item { display: flex; gap: 0.875rem; }
-    .c-ico { width: 36px; height: 36px; min-width: 36px; background: rgba(14,165,233,0.07); border: 1px solid rgba(14,165,233,0.12); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+    .c-ico { width: 32px; height: 32px; min-width: 32px; background: rgba(14,165,233,0.07); border: 1px solid rgba(14,165,233,0.12); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.82rem; }
     .c-lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; color: var(--subtle); text-transform: uppercase; margin-bottom: 0.2rem; }
     .c-val { font-size: 0.85rem; color: var(--muted); }
     .c-val a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
@@ -280,10 +280,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-brand">
-    <div class="nav-logo">HT</div>
-    <div class="nav-name">HarborTech <em>LLC</em></div>
-  </a>
+  <a href="#" class="nav-brand"><span class="nb-h">Harbor</span><span class="nb-t">Tech</span><span class="nb-llc">, LLC</span></a>
   <ul class="nav-links">
     <li><a href="#capabilities">Capabilities</a></li>
     <li><a href="#revenue">Revenue Intel</a></li>
