@@ -56,7 +56,7 @@
     .hero { display: grid; grid-template-columns: 55% 45%; border-bottom: 1px solid var(--border); }
 
     /* LEFT */
-    .hero-l { padding: 3.5rem 2.5rem 0 2rem; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+    .hero-l { padding: 3.5rem 2.5rem 3rem 2rem; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
     .h-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.22em; color: var(--sky); text-transform: uppercase; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem; }
     .h-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--sky); display: inline-block; }
     .h1 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(4.5rem, 9vw, 8.5rem); font-weight: 900; line-height: 0.88; text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 1.75rem; }
@@ -70,7 +70,7 @@
     .btn-g:hover { border-color: rgba(14,165,233,0.3); background: rgba(14,165,233,0.04); }
 
     /* Service quick-list — fills bottom of left col */
-    .svc-quick { border-top: 1px solid var(--border); margin-top: auto; }
+    .svc-quick { border-top: 1px solid var(--border); margin-top: 2rem; }
     .svc-q-row { display: grid; grid-template-columns: 2.5rem 1fr auto; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
     .svc-q-num { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--subtle); font-weight: 700; }
     .svc-q-name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
@@ -88,7 +88,7 @@
     .t-ttl { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--subtle); }
     .t-live { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--green); display: flex; align-items: center; gap: 0.3rem; }
     .t-livdot { width: 5px; height: 5px; background: var(--green); border-radius: 50%; box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
-    .t-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 1.1rem; }
+    .t-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 
     .t-log { font-family: 'JetBrains Mono', monospace; font-size: 0.67rem; color: var(--subtle); line-height: 1.95; }
     .t-log .cmd { color: rgba(14,165,233,0.75); }
@@ -228,7 +228,22 @@
     .f-cl a { color: var(--subtle); text-decoration: none; font-size: 0.72rem; transition: color 0.2s; }
     .f-cl a:hover { color: var(--muted); }
 
-    /* RESPONSIVE */
+    /* HAMBURGER */
+    .nav-ham { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; background: none; border: none; }
+    .nav-ham span { display: block; width: 22px; height: 2px; background: var(--muted); border-radius: 2px; transition: transform 0.28s, opacity 0.28s; }
+    .nav-ham.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-ham.open span:nth-child(2) { opacity: 0; }
+    .nav-ham.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* MOBILE MENU */
+    .mobile-menu { display: none; position: fixed; top: 58px; left: 0; right: 0; z-index: 998; background: rgba(6,10,18,0.98); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); flex-direction: column; padding: 0.5rem 0 1rem; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 1rem; font-weight: 500; padding: 0.9rem 1.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); transition: color 0.2s, background 0.2s; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--text); background: rgba(255,255,255,0.02); }
+    .mobile-menu .mm-cta { color: var(--sky) !important; font-weight: 600; }
+
+    /* RESPONSIVE — TABLET */
     @media(max-width:1024px) {
       .hero { grid-template-columns: 1fr; }
       .hero-r { border-top: 1px solid var(--border); }
@@ -241,19 +256,61 @@
       .ind-grid { grid-template-columns: repeat(4,1fr); }
       .f-main { grid-template-columns: 1fr; gap: 2rem; }
     }
+
+    /* RESPONSIVE — MOBILE */
     @media(max-width:768px) {
       .status-bar { display: none; }
       nav { position: fixed; top: 0; }
       .nav-links { display: none; }
-      .hero-l { padding: 5rem 1.25rem 1.5rem; }
+      .nav-ham { display: flex; }
+
+      .hero-l { padding: 5rem 1.25rem 2rem; }
+      .h-eyebrow { font-size: 0.55rem; }
+      .h1 { font-size: 3rem; }
+      .h-sub { font-size: 0.875rem; max-width: 100%; }
+      .h-btns { flex-direction: column; }
+      .btn-p, .btn-g { justify-content: center; text-align: center; }
+
+      .svc-q-row { grid-template-columns: 2rem 1fr; }
+      .svc-q-tag { display: none; }
+
       .hero-r { padding: 1.5rem 1.25rem; }
-      section { padding: 3.5rem 1.25rem; }
-      .ind-grid { grid-template-columns: repeat(2,1fr); }
+      .t-body { padding: 1rem; }
+      /* Hide lower terminal sections on mobile — keep log + leak card only */
+      .hero-r .t-body > div:nth-child(3),
+      .hero-r .t-body > div:nth-child(4),
+      .hero-r .t-body > div:nth-child(5) { display: none; }
+      .t-metrics { display: none; }
+
+      section { padding: 3rem 1.25rem; }
+      .sec-title { font-size: 1.85rem; }
+      .s-sub { font-size: 0.875rem; }
+
+      .cap-row { grid-template-columns: 2.5rem 1fr; gap: 1rem; }
+      .cap-tag { display: none; }
+      .cap-n { font-size: 2rem; }
+      .cap-name { font-size: 1.25rem; }
+
       .stats-strip { grid-template-columns: repeat(2,1fr); }
+      .ss-num { font-size: 2rem; }
+
+      .ind-grid { grid-template-columns: repeat(2,1fr); }
       .test-grid { grid-template-columns: 1fr; }
       .frow { grid-template-columns: 1fr; }
-      .sec-title { font-size: 2rem; }
-      .h1 { font-size: 4rem; }
+
+      .f-main { grid-template-columns: 1fr; gap: 1.75rem; }
+      .f-bottom { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .f-cl { flex-direction: column; gap: 0.5rem; }
+    }
+
+    /* RESPONSIVE — SMALL PHONES */
+    @media(max-width:480px) {
+      .h1 { font-size: 2.5rem; }
+      .sec-title { font-size: 1.65rem; }
+      .leak-range { font-size: 2.1rem; }
+      .ind-grid { grid-template-columns: repeat(2,1fr); }
+      .stats-strip { grid-template-columns: 1fr 1fr; }
+      .ss-cell { padding: 1.25rem 1rem; }
     }
   </style>
 </head>
@@ -288,7 +345,19 @@
     <li><a href="#about">About</a></li>
     <li><a href="#contact" class="nav-cta">Get Started</a></li>
   </ul>
+  <button class="nav-ham" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#capabilities" class="mm-link">Capabilities</a>
+  <a href="#revenue" class="mm-link">Revenue Intelligence</a>
+  <a href="#industries" class="mm-link">Industries</a>
+  <a href="#about" class="mm-link">About</a>
+  <a href="#contact" class="mm-cta">Get Started →</a>
+</div>
 
 <main>
 
@@ -396,6 +465,16 @@
             <div class="bar-r"><span class="bar-lbl">Monday</span><div class="bar-track"><div class="bar-fill" style="width:67%;background:var(--sky)"></div></div><span class="bar-val">$3,240</span></div>
             <div class="bar-r"><span class="bar-lbl">Tuesday</span><div class="bar-track"><div class="bar-fill" style="width:39%;background:var(--red)"></div></div><span class="bar-val" style="color:var(--red)">$1,890</span></div>
             <div class="bar-r"><span class="bar-lbl">Wednesday</span><div class="bar-track"><div class="bar-fill" style="width:74%;background:var(--sky)"></div></div><span class="bar-val">$3,560</span></div>
+          </div>
+        </div>
+
+        <!-- Billing gap bars -->
+        <div>
+          <div class="t-sect-lbl">// billing_gap_by_category</div>
+          <div class="bars">
+            <div class="bar-r"><span class="bar-lbl">HVAC Repair</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--sky)"></div></div><span class="bar-val">$385 avg</span></div>
+            <div class="bar-r"><span class="bar-lbl">Install</span><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--sky)"></div></div><span class="bar-val">$277 avg</span></div>
+            <div class="bar-r"><span class="bar-lbl">Maintenance</span><div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--gold)"></div></div><span class="bar-val" style="color:var(--gold)">$165 ↓</span></div>
           </div>
         </div>
 
@@ -768,6 +847,20 @@
 </footer>
 
 <script>
+// Hamburger menu
+const ham = document.getElementById('ham');
+const mobileMenu = document.getElementById('mobile-menu');
+ham.addEventListener('click', () => {
+  ham.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+document.querySelectorAll('.mobile-menu a').forEach(a => {
+  a.addEventListener('click', () => {
+    ham.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  });
+});
+
 // Bar animation on scroll
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => {
